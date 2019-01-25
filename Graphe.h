@@ -36,16 +36,10 @@ public:
     //
     // Contrat :
     //
-	
-	void AjouterArc(string referer, string cible);
-    // Mode d'emploi : Ajoute, si besoin les noeuds referer et cible et l'arc 
-    // au graphe. Sinon Augmente le poid du noeud visé existant.
 
-
-
-    // Mode d'emploi : Affiche le graphe actuel sur la sortie standard 
-    // sous la forme "GraphViz".
-
+	void AjouterLog(string referer, string cible);
+	// Mode d'emploi : Ajoute le log aux structures de donnees
+    // 
 
 
 //------------------------------------------------- Surcharge d'opérateurs
@@ -69,10 +63,18 @@ public:
 protected:
 //----------------------------------------------------- Méthodes protégées
 
+	void ajouterArc(string referer, string cible);
+    // Mode d'emploi : Ajoute, si besoin les noeuds referer et cible et l'arc 
+    // au graphe. Sinon Augmente le poid du noeud visé existant.
+
+	void ajouterNoeud(string noeud);
+    // Mode d'emploi : Ajoute, si besoin le noeuds  
+    // à la liste de noeud, puis associe un nom a ce noeud
+
 //----------------------------------------------------- Attributs protégés
 	
 	typedef unordered_map<string, unordered_map<string, int > > Tgraphe;
-	Tgraphe structureDeDonne;
+	Tgraphe catalogueDesArcs;
 	unordered_map<string,string> listeDesNoeuds;
 	unsigned int nombreDeNoeuds;
 
