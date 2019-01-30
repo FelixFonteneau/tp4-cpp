@@ -1,14 +1,18 @@
 #include "Graphe.h"
-#include <string>
-#include <unordered_map>
 #include <iostream>
+
 using namespace std;
 
 int main()
 {
 
-	Graphe g();
-	g.Ajouter("chat","miaou");
-	g.Ajouter("chat","miaou");
+	Graphe g;
+	g.AjouterArc("chat","miaou");
+	g.AjouterArc("chat","miaou");
+	g.AjouterArc("Oiseau","cuicui");
+	g.AjouterArc("chat","miaou");
+	g.AjouterArc("furet","hmmm");
+	g.AjouterArc("chat","bla");
+	cout << g;
 	return 0;
 }

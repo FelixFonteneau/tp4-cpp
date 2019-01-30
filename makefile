@@ -5,7 +5,7 @@ EDL= g++
 CPPFLAGS= -ansi -pedantic -g -Wall -std=c++11 -D MAP
 EDLFLAGS=
 RMFLAGS= -f
-INT= Graphe.h TestGraphe.h
+INT= Top.h TestTop.h
 REAL= $(INT:.h=.cpp)
 OBJ= $(REAL:.cpp=.o)
 LIBS=
@@ -28,9 +28,9 @@ $(EXE) : $(OBJ)
 	$(ECHO) "Compilation de <$(<)>"
 	$(COMP) $(CPPFLAGS) $(INCPATH) -c $<
 
-Graphe.o : Graphe.h 
+Top.o : Top.h
 
-TestGraphe.o : TestGraphe.h
+TestTop.o : TestTop.h
 
 
 $(EFFACE) :
