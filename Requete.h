@@ -13,8 +13,10 @@ using namespace std;
 
 //--------------------------------------------------- Interfaces utilisées
 #include <string>
+#include <regex>
+
 #include "Top.h"
-#include " Graphe.h"
+#include "Graphe.h"
 //------------------------------------------------------------- Constantes
 
 //------------------------------------------------------------------ Types
@@ -32,7 +34,7 @@ int fuseau;
 
 //------------------------------------------------------------------------
 // Rôle de la classe <Requete>
-//Cette classe permet de constituer un objet requête à partir d'une ligne 
+//Cette classe permet de constituer une requête à partir du contenu d'une ligne 
 //d'un fichier log
 //
 //------------------------------------------------------------------------
@@ -43,43 +45,41 @@ class Requete
 
 public:
 	//----------------------------------------------------- Méthodes publiques
+
 	
-	void AjouterAuGraphe(Graphe * g) const;
+
+	
+	void AjouterAuGraphe(Graphe * g) ;
 		// Mode d'emploi :
-		//
+		//Prend en paramètre un pointeur de Graphe auquel il ajoute les attributs fichierDemande 
+		//et referer de la requête courante
 		// Contrat :
 		//
 
-	void AjouterAuTop(Top * t) const;
+	void AjouterAuTop(Top * t) ;
 		// Mode d'emploi :
-		//
+		//Prend en paramètre un pointeur de Top auquel il ajoute l'attribut fichierDemande de la requete
+	    //courante
 		// Contrat :
 		//
 
-	string GetFichierDemande()const;
-    	// Mode d'emploi :
-		//
-		// Contrat :
-		//
-
-	string GetReferer()const;
-	// type Méthode ( liste des paramètres );
-		// Mode d'emploi :
-		//
-		// Contrat :
-		//
-
-	Date GetHeure()const;
-	// type Méthode ( liste des paramètres );
-		// Mode d'emploi :
-		//
-		// Contrat :
-		//
-
+	
 
 
 	//------------------------------------------------- Surcharge d'opérateurs
 	Requete & operator = (const Requete & unRequete);
+	// Mode d'emploi :
+	//
+	// Contrat :
+	//
+
+	friend istream & operator >> (istream &, const Requete & requete);
+	// Mode d'emploi :
+	//
+	// Contrat :
+	//
+
+	friend ostream & operator << (ostream &, const Requete & requete);
 	// Mode d'emploi :
 	//
 	// Contrat :
@@ -96,16 +96,13 @@ public:
 	Requete(string a = " ", string user = " ", string a_user = " ", Date d = {0,0,0,0,0,0,0}, string p = " ", string fd = " ",
 		int rc = 0, int t = 0, string r = " ", string i = " ") : adresseIP(a), userLogName(user), date(d), fichierDemande(fd),
 		ProtocoleUtilise(p),returnCode(rc), tailleReponseOctet(t), referer(r), identificationNavigateur(i) {}
-	// Mode d'emploi :
+	// Mode d'emploi :initiliase tous les attributs d'une requete par une valeur par defaut
 	//
 	// Contrat :
 	//
 
 	virtual ~Requete();
-	// Mode d'emploi :
-	//
-	// Contrat :
-	//
+	
 
 //------------------------------------------------------------------ PRIVE
 
