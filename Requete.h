@@ -13,17 +13,16 @@ using namespace std;
 
 //--------------------------------------------------- Interfaces utilisées
 #include <string>
-#include <regex>
+#include"Graphe.h"
+#include"Top.h"
 
-#include "Top.h"
-#include "Graphe.h"
 //------------------------------------------------------------- Constantes
 
 //------------------------------------------------------------------ Types
 typedef struct Date
 {
 int jour;
-int mois;
+string mois;
 int annee;
 int heure;
 int minute;
@@ -35,7 +34,7 @@ int fuseau;
 //------------------------------------------------------------------------
 // Rôle de la classe <Requete>
 //Cette classe permet de constituer une requête à partir du contenu d'une ligne 
-//d'un fichier log
+//d'un fichier log(A developper)
 //
 //------------------------------------------------------------------------
 
@@ -73,7 +72,7 @@ public:
 	// Contrat :
 	//
 
-	friend istream & operator >> (istream &, const Requete & requete);
+	friend istream & operator >> (istream &,  Requete & requete);
 	// Mode d'emploi :
 	//
 	// Contrat :
@@ -93,15 +92,17 @@ public:
 	// Contrat :
 	//
 
-	Requete(string a = " ", string user = " ", string a_user = " ", Date d = {0,0,0,0,0,0,0}, string p = " ", string fd = " ",
-		int rc = 0, int t = 0, string r = " ", string i = " ") : adresseIP(a), userLogName(user), date(d), fichierDemande(fd),
-		ProtocoleUtilise(p),returnCode(rc), tailleReponseOctet(t), referer(r), identificationNavigateur(i) {}
-	// Mode d'emploi :initiliase tous les attributs d'une requete par une valeur par defaut
+	Requete();
+	// Mode d'emploi (constructeur par défaut) :
 	//
 	// Contrat :
 	//
 
 	virtual ~Requete();
+	// Mode d'emploi (destructeur) :
+	//
+	// Contrat :
+	//
 	
 
 //------------------------------------------------------------------ PRIVE
@@ -125,6 +126,5 @@ private:
 
 };
 
-//-------------------------------- Autres définitions dépendantes de <Requete>
 
 #endif // Requete_H

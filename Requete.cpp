@@ -18,9 +18,6 @@ using namespace std;
 #include "Requete.h"
 
 
-
-//------------------------------------------------------------- Constantes
-
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
@@ -30,26 +27,12 @@ using namespace std;
 
 	bool ValiderLigne(string ligne)
 	{
-		
-		/*
-		regex re("^\d{3}\.\d{3}\.\d{1}\s-\s-\s\[d{2}\\[a-zA-Z]{3}$\\d{4}:d{2}:d{2}:d{2}\+d{4}\"[A-Z]*\s\\[a-zA-Z]*\s\\d{3}\sd*");
-		bool result =regex_match(ligne, re);
-		return result;
+		// Algorithme :
 
-		/*
-		var yearReg = '(201[4-9]|202[0-9])';            ///< Allows a number between 2014 and 2029
-		var monthReg = '(0[1-9]|1[0-2])';               ///< Allows a number between 00 and 12
-		var dayReg = '(0[1-9]|1[0-9]|2[0-9]|3[0-1])';   ///< Allows a number between 00 and 31
-		var hourReg = '([0-1][0-9]|2[0-3])';            ///< Allows a number between 00 and 24
-		var minReg = '([0-5][0-9])';                    ///< Allows a number between 00 and 59
-		var reg = new RegExp('^' + yearReg + '-' + monthReg + '-' + dayReg + ' ' + hourReg + ':' + minReg + '$', 'g');
-		*/
-
-	}
+	}//----- Fin de Méthode
 
      void Requete::AjouterAuGraphe(Graphe * g)
 	// Algorithme :
-	
 	{
 		g->AjouterArc(referer, fichierDemande);
 
@@ -72,28 +55,91 @@ Requete & Requete::operator = (const Requete & unRequete)
 {
 } //----- Fin de operator =
 
-istream & operator >> (istream & is, const Requete & requete)
+istream & operator >> (istream & is,  Requete & requete) //j'ai enlevé le const
 {
+	//i représente l'indice de la position dans une ligne de log
+	int i = 0;
 	string ligne;
-	getline(is, ligne);
-	if (ValiderLigne(ligne))
-	{
-		
-	}
+	getline(is, ligne);//voir si je dois mettre if (getligne)
 
+	//if (ValiderLigne(ligne))
+	//{
+
+		//AdresseIP
+		i = ligne.find(" ");
+		requete.adresseIP = ligne.substr(0, i); 
+		//on supprime au fur et à mesure les données qui ont été stockés dans un attribut
+		ligne.erase(0, i + 1); 
+
+		//UserLogName
+		i = ligne.find(" ");
+		requete.userLogName = ligne.substr(0, i);
+		ligne.erase(0, i + 1);
+
+		//authentificateUser
+		i = ligne.find(" ");
+		requete.authentificateUser = ligne.substr(0, i);
+		ligne.erase(0, i + 2);
+
+		//Date
+		requete.date.jour= atoi((ligne.substr(0, 2)).c_str());
+		requete.date.mois= ligne.substr(3, 6);
+		requete.date.annee = atoi((ligne.substr(7, 11)).c_str());
+		requete.date.heure = atoi((ligne.substr(12, 14)).c_str());
+		requete.date.minute = atoi((ligne.substr(15, 17)).c_str());
+		requete.date.seconde = atoi((ligne.substr(18, 20)).c_str());
+		requete.date.fuseau = atoi((ligne.substr(21, 25)).c_str());
+		ligne.erase(0, 29);
+
+		//ProtocoleUtilise
+		i = ligne.find(" ");
+		requete.ProtocoleUtilise = ligne.substr(0, i);
+		ligne.erase(0, i + 1);
+
+		//FichierDemande
+		i = ligne.find(" ");
+		requete.fichierDemande = ligne.substr(0, i);
+		ligne.erase(0, i + 1);
+		i = ligne.find("\""); //on ignore le HTTP/1.1 on ne le stocke nulle part
+		ligne.erase(0, i + 2);
+
+		//returnCode
+		i = ligne.find(" ");
+		requete.returnCode=atoi((ligne.substr(0, i)).c_str());
+		ligne.erase(0, i + 1);
+
+		//tailleReponseOctet
+		i = ligne.find(" ");
+		requete.tailleReponseOctet= atol((ligne.substr(0, i)).c_str());
+		ligne.erase(0, i + 2);
+
+		//Referer
+		i = ligne.find("\"");
+		requete.referer= ligne.substr(0, i);
+		ligne.erase(0, i + 3);
+
+		//identificationNavigateur
+		i = ligne.find("\"");
+		requete.identificationNavigateur= ligne.substr(0, i);
+	//}
+		return is;
 }
 ostream & operator << (ostream & os, const Requete & requete)
 {
-	// Algorithme :
-	os << requete.userLogName;
-	os << requete.authentificateUser;
-	//os << requete.date;
-	os << requete.ProtocoleUtilise;
-	os << requete.fichierDemande;
-	os << requete.returnCode;
-	os << requete.tailleReponseOctet;
-	os << requete.referer;
-	os << requete.identificationNavigateur;
+
+	os << requete.adresseIP<<endl;
+	os << requete.userLogName << endl;
+	os << requete.authentificateUser << endl;
+	os << requete.date.jour<<"/"<< requete.date.mois<<"/";
+	os << requete.date.annee << endl;
+	os << requete.date.heure<<":"<< requete.date.minute << ":" << requete.date.seconde << " ";
+	os << requete.date.fuseau << endl;
+	os << requete.ProtocoleUtilise << endl;
+	os << requete.fichierDemande << endl;
+	os << requete.returnCode<<endl;
+	os << requete.tailleReponseOctet << endl;
+	os << requete.referer << endl;
+	os << requete.identificationNavigateur << endl;
 
 }
 
@@ -108,15 +154,14 @@ Requete::Requete(const Requete & unRequete)
 #endif
 } //----- Fin de Requete (constructeur de copie)
 
-
-//Requete::Requete()
+Requete::Requete()
 // Algorithme :
 //
-//{
-//#ifdef MAP
-	//cout << "Appel au constructeur de <Requete>" << endl;
-//#endif
-//} //----- Fin de Requete
+{
+#ifdef MAP
+	cout << "Appel au constructeur de <Requete>" << endl;
+#endif
+} //----- Fin de Requete
 
 Requete::~Requete()
 // Algorithme :
