@@ -9,30 +9,41 @@ using namespace std;
 int main()
 {
 	Graphe g;
+	Top top(10);
 	Requete requete;
-	ifstream fichier;
-	fichier.open("mini.log");
-	fichier >> requete;
-	requete.AjouterAuGraphe(&g);
+	ifstream fichier("mini.log");
+	for (int i = 0; i < 17; i++)
+	{
+		fichier >> requete;
+		if (!requete.filtreDoc())
+		{
+			requete.AjouterAuGraphe(&g);
+			requete.AjouterAuTop(&top);
+		}
+	}
 	cout << g << endl;
+	cout << top << endl;
+
 	fichier.close();
 	
-
+	
 
 	
 // FAIT DES ERREURS VALGRIND QUAND JE METS LE WHILE
 //PROBLEME DANS DATE.MOIS JE NE COMPREND PAS POURQUOI!!!!!!
 	/*
-	while (!fichier.eof())
+	if (!(fichier.fail())
 	{
-		fichier >> requete;
-		requete.AjouterAuGraphe(&g);
+		while (fichier)
+		{
+			fichier >> requete;
+			requete.AjouterAuGraphe(&g);
+		}
 	}
-	cout << g << endl;
 	
+	cout << g << endl;
 	fichier.close();
 	*/
-	
 }
 
 

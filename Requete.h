@@ -51,7 +51,7 @@ public:
 	void AjouterAuGraphe(Graphe * g) ;
 		// Mode d'emploi :
 		//Prend en paramètre un pointeur de Graphe auquel il ajoute les attributs fichierDemande 
-		//et referer de la requête courante
+		//et referer de la requête courante.
 		// Contrat :
 		//
 
@@ -62,15 +62,22 @@ public:
 		// Contrat :
 		//
 
-	
+	bool filtreDoc();
+		// Mode d'emploi :
+		//Renvoie vrai si le document a une extension de type image, css ou javascript
+	    //renvoie faux sinon.
+		// Contrat : doit être applique sur une requête "valide"
+
+	bool filtreHeure(int heure);
+	// Mode d'emploi :
+	//Renvoie vrai si le document a été consulté dans l'intervalle
+	//[heure, heure+1] renvoie faux sinon.
+	// Contrat : doit être applique sur une requête "valide"
+
 
 
 	//------------------------------------------------- Surcharge d'opérateurs
-	Requete & operator = (const Requete & unRequete);
-	// Mode d'emploi :
-	//
-	// Contrat :
-	//
+
 
 	friend istream & operator >> (istream &,  Requete & requete);
 	// Mode d'emploi :
@@ -116,7 +123,7 @@ private:
 	string userLogName;
 	string authentificateUser;
 	Date date;
-	string ProtocoleUtilise; //Voir si je peux mettre un enum
+	string ProtocoleUtilise; 
 	string fichierDemande;
 	unsigned int returnCode;
 	unsigned long int tailleReponseOctet; 

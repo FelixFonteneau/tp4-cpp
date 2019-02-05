@@ -46,14 +46,40 @@ using namespace std;
 		t->AjouterCible(fichierDemande);
 	} //----- Fin de Méthode
 
+	bool Requete::filtreDoc()
+	// Algorithme : traite le document de facon à ne laisser
+	//que l'extension, puis compare l'extension avec celle
+	//d'un doc de type image, css ou javascript
+	{
+		bool exclu=true;
+		string extension = fichierDemande;
+		int i = extension.find_last_of(".");
+		extension.erase(0, i + 1);
+		if (extension == "jped" || extension == "gif" || extension == "jpg" || extension == "png"
+			|| extension == "tif" || extension == "css" || extension == "js")
+		{
+			return exclu;
+		}
+		return !exclu;
+		
+	}//----- Fin de Méthode
+
+	bool Requete::filtreHeure(int heure)
+	// Algorithme :
+	//
+	{
+		if (date.heure == heure)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}//----- Fin de Méthode
 
 
 //------------------------------------------------- Surcharge d'opérateurs
-Requete & Requete::operator = (const Requete & unRequete)
-// Algorithme :
-//
-{
-} //----- Fin de operator =
 
 istream & operator >> (istream & is,  Requete & requete) //j'ai enlevé le const
 {
@@ -140,6 +166,7 @@ ostream & operator << (ostream & os, const Requete & requete)
 	os << requete.tailleReponseOctet << endl;
 	os << requete.referer << endl;
 	os << requete.identificationNavigateur << endl;
+	return os;
 
 }
 
