@@ -1,38 +1,43 @@
-ECHO= @echo
-RM= rm
-COMP= g++
-EDL= g++
-CPPFLAGS= -ansi -pedantic -g -Wall -std=c++11 -D MAP
-EDLFLAGS=
-RMFLAGS= -f
-INT= Top.h TestTop.h
-REAL= $(INT:.h=.cpp)
-OBJ= $(REAL:.cpp=.o)
+#Makefile generique
+#Outils
+CXX=g++
+LD=g++
+RM=rm
+ECHO=echo
+
+#Options
+CXXFLAGS=-g -W -Wall -pedantic -Wextra -ansi -O2 -DMAP -std=c++11
+LDFLAGS=
+RMFLAGS=-rf
+
+#Fichiers
+HEAD=$(wildcard *.h)
+SRC=$(wildcard *.cpp)
+OBJ=$(SRC:.cpp=.o)
 LIBS=
-INCPATH=
-LIBPATH=
-EFFACE= clean
-EXE= analog
-DATE= 25.01
-AUTHOR= Houda & Felix
-YEAR= 2019
-EMAIL= houda.ouhssain@insa-lyon.fr felix.fonteneau@insa-lyon.fr
 
-.PHONY: $(EFFACE)
+#Cibles speciales
+EXE=bin
+RUN=execute
+CLEAN=clean
+.PHONY: $(CLEAN) $(RUN)
 
-$(EXE) : $(OBJ)
-	$(ECHO) "Edition de liens de <$(EXE)>"
-	$(EDL) -o $(EXE) $(OBJ) $(LIBS)
+#Cibles
+$(EXE): $(OBJ)
+	@$(ECHO) Edition des liens
+	@$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
 
-%.o : %.cpp %.h
-	$(ECHO) "Compilation de <$(<)>"
-	$(COMP) $(CPPFLAGS) $(INCPATH) -c $<
+$(RUN): $(EXE)
+	@$(ECHO) Execution de $^
+	@./$(EXE)
 
-Top.o : Top.h
+$(CLEAN):
+	@$(RM) $(RMFLAGS) $(EXE) $(OBJ)
 
-TestTop.o : TestTop.h
+#Dependances complementaires
 
+#Regles d'inference
+%.o: %.cpp
+	@$(ECHO) Compilation de $<
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(EFFACE) :
-	$(ECHO) "Suppression des fichiers"
-	$(RM) $(RMFLAGS) $(OBJ) $(EXE) core
