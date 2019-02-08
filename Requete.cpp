@@ -23,8 +23,6 @@ using namespace std;
 //----------------------------------------------------- Méthodes publiques
 
 
-
-
 	bool ValiderLigne(string ligne)
 	{
 		// Algorithme :
@@ -32,7 +30,6 @@ using namespace std;
 	}//----- Fin de Méthode
 
      void Requete::AjouterAuGraphe(Graphe * g)
-	// Algorithme :
 	{
 		g->AjouterArc(referer, fichierDemande);
 
@@ -40,8 +37,6 @@ using namespace std;
 
 
 	void Requete::AjouterAuTop(Top * t)
-	// Algorithme :
-	//
 	{
 		t->AjouterCible(fichierDemande);
 	} //----- Fin de Méthode
@@ -65,8 +60,6 @@ using namespace std;
 	}//----- Fin de Méthode
 
 	bool Requete::filtreHeure(int heure)
-	// Algorithme :
-	//
 	{
 		if (date.heure == heure)
 		{
@@ -83,76 +76,59 @@ using namespace std;
 
 istream & operator >> (istream & is,  Requete & requete) //j'ai enlevé le const
 {
-	//i représente l'indice de la position dans une ligne de log
-	int i = 0;
-	string ligne;
-	getline(is, ligne);//voir si je dois mettre if (getligne)
+	string lesEntiers;
+	//AdresseIP
+	getline(is, requete.adresseIP,' ');
+	//UserLogName
+	getline(is, requete.userLogName,' ');
+	//AuthentificatedUser
+	getline(is, requete.authentificateUser,' ');
+	is.ignore(16, '[');
+	//Date
+	//--jour--
+	getline(is, lesEntiers, '/');
+	requete.date.jour = atoi(lesEntiers.c_str());
+	//--mois--
+	getline(is, requete.date.mois, '/');
+	//--annee--
+	getline(is, lesEntiers, ':');
+	requete.date.annee = atoi(lesEntiers.c_str());
+	//--heure--
+	getline(is, lesEntiers, ':');
+	requete.date.heure = atoi(lesEntiers.c_str());
+	//--heure--
+	getline(is, lesEntiers, ':');
+	requete.date.minute = atoi(lesEntiers.c_str());
+	//--seconde--
+	getline(is, lesEntiers, ' ');
+	requete.date.seconde = atoi(lesEntiers.c_str());
+	//--fuseau--
+	getline(is, lesEntiers, ']');
+	requete.date.fuseau = atoi(lesEntiers.c_str());
+	//Protocole utilisé
+	is.ignore(16, '\"');
+	getline(is, requete.ProtocoleUtilise, ' ');
+	//Fichier demande
+	getline(is, requete.fichierDemande, ' ');
+	//ReturnCode
+	is.ignore(32, ' ');
+	getline(is, lesEntiers, ' ');
+	requete.returnCode = atoi(lesEntiers.c_str());
+	//tailleReponseOctet
+	getline(is, lesEntiers, ' ');
+	requete.tailleReponseOctet = atoi(lesEntiers.c_str());
+	//referer
+	is.ignore(16, '\"');
+	getline(is, requete.referer, '\"');
+	//identificationNavigateur
+	is.ignore(16, '\"');
+	getline(is, requete.identificationNavigateur, '\"');
 
-	//if (ValiderLigne(ligne))
-	//{
-
-		//AdresseIP
-		i = ligne.find(" ");
-		requete.adresseIP = ligne.substr(0, i); 
-		//on supprime au fur et à mesure les données qui ont été stockés dans un attribut
-		ligne.erase(0, i + 1); 
-
-		//UserLogName
-		i = ligne.find(" ");
-		requete.userLogName = ligne.substr(0, i);
-		ligne.erase(0, i + 1);
-
-		//authentificateUser
-		i = ligne.find(" ");
-		requete.authentificateUser = ligne.substr(0, i);
-		ligne.erase(0, i + 2);
-
-		//Date
-		requete.date.jour= atoi((ligne.substr(0, 2)).c_str());
-		requete.date.mois= ligne.substr(3, 6);
-		requete.date.annee = atoi((ligne.substr(7, 11)).c_str());
-		requete.date.heure = atoi((ligne.substr(12, 14)).c_str());
-		requete.date.minute = atoi((ligne.substr(15, 17)).c_str());
-		requete.date.seconde = atoi((ligne.substr(18, 20)).c_str());
-		requete.date.fuseau = atoi((ligne.substr(21, 25)).c_str());
-		ligne.erase(0, 29);
-
-		//ProtocoleUtilise
-		i = ligne.find(" ");
-		requete.ProtocoleUtilise = ligne.substr(0, i);
-		ligne.erase(0, i + 1);
-
-		//FichierDemande
-		i = ligne.find(" ");
-		requete.fichierDemande = ligne.substr(0, i);
-		ligne.erase(0, i + 1);
-		i = ligne.find("\""); //on ignore le HTTP/1.1 on ne le stocke nulle part
-		ligne.erase(0, i + 2);
-
-		//returnCode
-		i = ligne.find(" ");
-		requete.returnCode=atoi((ligne.substr(0, i)).c_str());
-		ligne.erase(0, i + 1);
-
-		//tailleReponseOctet
-		i = ligne.find(" ");
-		requete.tailleReponseOctet= atol((ligne.substr(0, i)).c_str());
-		ligne.erase(0, i + 2);
-
-		//Referer
-		i = ligne.find("\"");
-		requete.referer= ligne.substr(0, i);
-		ligne.erase(0, i + 3);
-
-		//identificationNavigateur
-		i = ligne.find("\"");
-		requete.identificationNavigateur= ligne.substr(0, i);
-	//}
-		return is;
+	return is;
 }
+
 ostream & operator << (ostream & os, const Requete & requete)
 {
-
 	os << requete.adresseIP<<endl;
 	os << requete.userLogName << endl;
 	os << requete.authentificateUser << endl;
@@ -167,23 +143,10 @@ ostream & operator << (ostream & os, const Requete & requete)
 	os << requete.referer << endl;
 	os << requete.identificationNavigateur << endl;
 	return os;
-
 }
 
-
 //-------------------------------------------- Constructeurs - destructeur
-Requete::Requete(const Requete & unRequete)
-// Algorithme :
-//
-{
-#ifdef MAP
-	cout << "Appel au constructeur de copie de <Requete>" << endl;
-#endif
-} //----- Fin de Requete (constructeur de copie)
-
 Requete::Requete()
-// Algorithme :
-//
 {
 #ifdef MAP
 	cout << "Appel au constructeur de <Requete>" << endl;
@@ -191,8 +154,6 @@ Requete::Requete()
 } //----- Fin de Requete
 
 Requete::~Requete()
-// Algorithme :
-//
 {
 #ifdef MAP
 	cout << "Appel au destructeur de <Requete>" << endl;

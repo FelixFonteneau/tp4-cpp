@@ -19,6 +19,7 @@ using namespace std;
 //------------------------------------------------------------- Constantes
 
 //------------------------------------------------------------------ Types
+
 typedef struct Date
 {
 int jour;
@@ -30,12 +31,15 @@ int seconde;
 int fuseau;
 }Date;
 
-
 //------------------------------------------------------------------------
 // Rôle de la classe <Requete>
 //Cette classe permet de constituer une requête à partir du contenu d'une ligne 
-//d'un fichier log(A developper)
-//
+//d'un fichier log. Elle permet également de faire tout les traitements sur une requête
+//pour vérifier si elle est conforme à la syntaxe d'une ligne de log.
+//Une fois la requête validée, elle permet de l'ajouter soit au graphe ou au top10
+//mais aussi de filtrer les requêtes par rapport aux différentes specifications:
+//soit en ne prenant pas compte les images, les fichiers javascrip, ou en considérant que
+//les requêtes qui ont été opérés dans un intervalle de temps.
 //------------------------------------------------------------------------
 
 class Requete 
@@ -43,36 +47,26 @@ class Requete
 	//----------------------------------------------------------------- PUBLIC
 
 public:
+
 	//----------------------------------------------------- Méthodes publiques
-
-	
-
 	
 	void AjouterAuGraphe(Graphe * g) ;
-		// Mode d'emploi :
-		//Prend en paramètre un pointeur de Graphe auquel il ajoute les attributs fichierDemande 
-		//et referer de la requête courante.
-		// Contrat :
-		//
+		// Mode d'emploi :Prend en paramètre un pointeur de Graphe auquel il ajoute les attributs 
+		//fichierDemandé et referer de la requête courante.
 
 	void AjouterAuTop(Top * t) ;
-		// Mode d'emploi :
-		//Prend en paramètre un pointeur de Top auquel il ajoute l'attribut fichierDemande de la requete
-	    //courante
-		// Contrat :
-		//
+		// Mode d'emploi : Prend en paramètre un pointeur de Top auquel il ajoute l'attribut
+		//fichierDemande de la requete courante
 
 	bool filtreDoc();
-		// Mode d'emploi :
-		//Renvoie vrai si le document a une extension de type image, css ou javascript
+		// Mode d'emploi : Renvoie vrai si le document a une extension de type image, css ou javascript
 	    //renvoie faux sinon.
-		// Contrat : doit être applique sur une requête "valide"
+		// Contrat : doit être appliqué à une requête "valide"
 
 	bool filtreHeure(int heure);
-	// Mode d'emploi :
-	//Renvoie vrai si le document a été consulté dans l'intervalle
+	// Mode d'emploi : Renvoie vrai si le document a été consulté dans l'intervalle
 	//[heure, heure+1] renvoie faux sinon.
-	// Contrat : doit être applique sur une requête "valide"
+	// Contrat : doit être appliqué à une requête "valide"
 
 
 
@@ -80,43 +74,29 @@ public:
 
 
 	friend istream & operator >> (istream &,  Requete & requete);
-	// Mode d'emploi :
-	//
-	// Contrat :
-	//
+	// Mode d'emploi : Extrait les informations du fichier istream à la volée 
+	//pour remplir les attributs d'une requête à partir 
+	//d'une ligne de log
+
 
 	friend ostream & operator << (ostream &, const Requete & requete);
-	// Mode d'emploi :
-	//
-	// Contrat :
-	//
+	// Mode d'emploi : Afficher sur la sortie standard les attributs 
+	//de la requête un par ligne.
 
 
 //-------------------------------------------- Constructeurs - destructeur
-	Requete(const Requete & unRequete);
-	// Mode d'emploi (constructeur de copie) :
-	//
-	// Contrat :
-	//
 
 	Requete();
-	// Mode d'emploi (constructeur par défaut) :
-	//
-	// Contrat :
-	//
-
+	// Mode d'emploi : Construit une requête avec des valeurs
+	// par défaut pour les attributs
+	
 	virtual ~Requete();
-	// Mode d'emploi (destructeur) :
-	//
-	// Contrat :
-	//
+	// Mode d'emploi : Détruit la requête courante
 	
 
 //------------------------------------------------------------------ PRIVE
 
 private:
-
-	//----------------------------------------------------- Méthodes protégées
 
 	//----------------------------------------------------- Attributs protégés
 	string adresseIP;
@@ -129,9 +109,6 @@ private:
 	unsigned long int tailleReponseOctet; 
 	string referer;
 	string identificationNavigateur;
-
-
 };
-
 
 #endif // Requete_H
