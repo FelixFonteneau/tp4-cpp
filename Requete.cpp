@@ -4,7 +4,7 @@
 	début                : 25/01/2019
 	copyright : (C)2019 par Félix Fonteneau et Houda Ouhssain
 	e - mail : Felix.Fonteneau@insa-lyon.fr / houda.ouhssain@insa-lyon.fr
-/************************************************************************* */
+/**************************************************************************/
 
 	//---------- Réalisation de la classe <Requete> (fichier Requete.cpp) ------------
 
@@ -13,9 +13,12 @@
 	//-------------------------------------------------------- Include système
 #include <iostream>
 using namespace std;
+#include <algorithm>
 
 //------------------------------------------------------ Include personnel
 #include "Requete.h"
+
+//------------------------------------------------------------- Constantes
 
 
 //----------------------------------------------------------------- PUBLIC
@@ -29,37 +32,37 @@ using namespace std;
 
 	}//----- Fin de Méthode
 
-     void Requete::AjouterAuGraphe(Graphe * g)
+     void Requete::AjouterAuGraphe(Graphe &g) const
 	{
-		g->AjouterArc(referer, fichierDemande);
+		g.AjouterArc(referer, fichierDemande);
 
 	} //----- Fin de Méthode
 
 
-	void Requete::AjouterAuTop(Top * t)
+	void Requete::AjouterAuTop(Top &t)const
 	{
-		t->AjouterCible(fichierDemande);
+		t.AjouterCible(fichierDemande);
 	} //----- Fin de Méthode
 
-	bool Requete::filtreDoc()
+	bool Requete::FiltreDoc() const
 	// Algorithme : traite le document de facon à ne laisser
 	//que l'extension, puis compare l'extension avec celle
 	//d'un doc de type image, css ou javascript
 	{
-		bool exclu=true;
+		bool inclu=true;
 		string extension = fichierDemande;
 		int i = extension.find_last_of(".");
 		extension.erase(0, i + 1);
 		if (extension == "jped" || extension == "gif" || extension == "jpg" || extension == "png"
 			|| extension == "tif" || extension == "css" || extension == "js")
 		{
-			return exclu;
+			return !inclu;
 		}
-		return !exclu;
+		return inclu;
 		
 	}//----- Fin de Méthode
 
-	bool Requete::filtreHeure(int heure)
+	bool Requete::FiltreHeure( const int &heure) const
 	{
 		if (date.heure == heure)
 		{
@@ -74,7 +77,7 @@ using namespace std;
 
 //------------------------------------------------- Surcharge d'opérateurs
 
-istream & operator >> (istream & is,  Requete & requete) //j'ai enlevé le const
+istream & operator >> (istream & is,  Requete & requete)
 {
 	string lesEntiers;
 	//AdresseIP
@@ -120,6 +123,12 @@ istream & operator >> (istream & is,  Requete & requete) //j'ai enlevé le const
 	//referer
 	is.ignore(16, '\"');
 	getline(is, requete.referer, '\"');
+	const string URLBASE = "http://intranet-if.insa-lyon.fr";
+	if (!requete.referer.compare(0, URLBASE.size(), URLBASE))
+	{
+		(requete.referer).erase(0,URLBASE.size());
+		requete.baseUrl = URLBASE;
+	}
 	//identificationNavigateur
 	is.ignore(16, '\"');
 	getline(is, requete.identificationNavigateur, '\"');
@@ -129,18 +138,19 @@ istream & operator >> (istream & is,  Requete & requete) //j'ai enlevé le const
 
 ostream & operator << (ostream & os, const Requete & requete)
 {
-	os << requete.adresseIP<<endl;
+	os << requete.adresseIP << endl;
 	os << requete.userLogName << endl;
 	os << requete.authentificateUser << endl;
-	os << requete.date.jour<<"/"<< requete.date.mois<<"/";
+	os << requete.date.jour << "/" << requete.date.mois << "/";
 	os << requete.date.annee << endl;
-	os << requete.date.heure<<":"<< requete.date.minute << ":" << requete.date.seconde << " ";
+	os << requete.date.heure << ":" << requete.date.minute << ":" << requete.date.seconde << " ";
 	os << requete.date.fuseau << endl;
 	os << requete.ProtocoleUtilise << endl;
 	os << requete.fichierDemande << endl;
-	os << requete.returnCode<<endl;
+	os << requete.returnCode << endl;
 	os << requete.tailleReponseOctet << endl;
 	os << requete.referer << endl;
+	os << requete.baseUrl << endl;
 	os << requete.identificationNavigateur << endl;
 	return os;
 }
@@ -148,6 +158,7 @@ ostream & operator << (ostream & os, const Requete & requete)
 //-------------------------------------------- Constructeurs - destructeur
 Requete::Requete()
 {
+	baseUrl = " ";
 #ifdef MAP
 	cout << "Appel au constructeur de <Requete>" << endl;
 #endif
@@ -159,8 +170,3 @@ Requete::~Requete()
 	cout << "Appel au destructeur de <Requete>" << endl;
 #endif
 } //----- Fin de ~Requete
-
-
-//------------------------------------------------------------------ PRIVE
-
-//----------------------------------------------------- Méthodes protégées

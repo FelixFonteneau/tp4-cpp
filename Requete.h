@@ -1,10 +1,10 @@
 /************************************************************************
 								Requete - description
-								------------------ -
+								-------------------
 	début                : 25/01/2019
 	copyright : (C)2019 par Félix Fonteneau et Houda Ouhssain
 	e - mail : Felix.Fonteneau@insa-lyon.fr / houda.ouhssain@insa-lyon.fr
-	/* ************************************************************************ */
+/**************************************************************************/
 	
 	//---------- Interface de la classe <Requete> (fichier Requete.h) ----------------
 #if ! defined ( Requete_H )
@@ -50,20 +50,20 @@ public:
 
 	//----------------------------------------------------- Méthodes publiques
 	
-	void AjouterAuGraphe(Graphe * g) ;
+	void AjouterAuGraphe(Graphe &g) const;
 		// Mode d'emploi :Prend en paramètre un pointeur de Graphe auquel il ajoute les attributs 
 		//fichierDemandé et referer de la requête courante.
 
-	void AjouterAuTop(Top * t) ;
+	void AjouterAuTop(Top &t) const ;
 		// Mode d'emploi : Prend en paramètre un pointeur de Top auquel il ajoute l'attribut
 		//fichierDemande de la requete courante
 
-	bool filtreDoc();
-		// Mode d'emploi : Renvoie vrai si le document a une extension de type image, css ou javascript
-	    //renvoie faux sinon.
+	bool FiltreDoc() const;
+		// Mode d'emploi : Renvoie faux si le document a une extension de type image, css ou javascript
+	    //renvoie vrai sinon.
 		// Contrat : doit être appliqué à une requête "valide"
 
-	bool filtreHeure(int heure);
+	bool FiltreHeure(const int &heure) const;
 	// Mode d'emploi : Renvoie vrai si le document a été consulté dans l'intervalle
 	//[heure, heure+1] renvoie faux sinon.
 	// Contrat : doit être appliqué à une requête "valide"
@@ -107,6 +107,7 @@ private:
 	string fichierDemande;
 	unsigned int returnCode;
 	unsigned long int tailleReponseOctet; 
+	string baseUrl;
 	string referer;
 	string identificationNavigateur;
 };
