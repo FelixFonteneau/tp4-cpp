@@ -17,7 +17,7 @@ OBJ=$(SRC:.cpp=.o)
 LIBS=
 
 #Cibles speciales
-EXE=bin
+EXE=analog
 RUN=execute
 CLEAN=clean
 .PHONY: $(CLEAN) $(RUN)
@@ -40,4 +40,3 @@ $(CLEAN):
 %.o: %.cpp
 	@$(ECHO) Compilation de $<
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
-

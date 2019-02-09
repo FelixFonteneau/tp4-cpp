@@ -1,19 +1,21 @@
 /************************************************************************
 								Requete - description
 								------------------ -
-	début                : 25/01/2019
-	copyright : (C)2019 par Félix Fonteneau et Houda Ouhssain
+	dï¿½but                : 25/01/2019
+	copyright : (C)2019 par Fï¿½lix Fonteneau et Houda Ouhssain
 	e - mail : Felix.Fonteneau@insa-lyon.fr / houda.ouhssain@insa-lyon.fr
-/**************************************************************************/
+**************************************************************************/
 
-	//---------- Réalisation de la classe <Requete> (fichier Requete.cpp) ------------
+	//---------- Rï¿½alisation de la classe <Requete> (fichier Requete.cpp) ------------
 
 	//---------------------------------------------------------------- INCLUDE
 
-	//-------------------------------------------------------- Include système
+	//-------------------------------------------------------- Include systï¿½me
 #include <iostream>
 using namespace std;
 #include <algorithm>
+#include <regex>
+#include <sstream>
 
 //------------------------------------------------------ Include personnel
 #include "Requete.h"
@@ -23,29 +25,29 @@ using namespace std;
 
 //----------------------------------------------------------------- PUBLIC
 
-//----------------------------------------------------- Méthodes publiques
+//----------------------------------------------------- Mï¿½thodes publiques
 
-
-	bool ValiderLigne(string ligne)
+  bool Requete::AjouterAuGraphe(Graphe &g) const
 	{
-		// Algorithme :
+		if(valide)
+		{
+			g.AjouterArc(referer, fichierDemande);
+		}
+		return valide;
+	} //----- Fin de Mï¿½thode
 
-	}//----- Fin de Méthode
 
-     void Requete::AjouterAuGraphe(Graphe &g) const
+	bool Requete::AjouterAuTop(Top &t)const
 	{
-		g.AjouterArc(referer, fichierDemande);
-
-	} //----- Fin de Méthode
-
-
-	void Requete::AjouterAuTop(Top &t)const
-	{
-		t.AjouterCible(fichierDemande);
-	} //----- Fin de Méthode
+		if(valide)
+		{
+			t.AjouterCible(fichierDemande);
+		}
+		return valide;
+	} //----- Fin de Mï¿½thode
 
 	bool Requete::FiltreDoc() const
-	// Algorithme : traite le document de facon à ne laisser
+	// Algorithme : traite le document de facon ï¿½ ne laisser
 	//que l'extension, puis compare l'extension avec celle
 	//d'un doc de type image, css ou javascript
 	{
@@ -59,8 +61,8 @@ using namespace std;
 			return !inclu;
 		}
 		return inclu;
-		
-	}//----- Fin de Méthode
+
+	}//----- Fin de Mï¿½thode
 
 	bool Requete::FiltreHeure( const int &heure) const
 	{
@@ -72,93 +74,106 @@ using namespace std;
 		{
 			return false;
 		}
-	}//----- Fin de Méthode
+	}//----- Fin de Mï¿½thode
 
 
-//------------------------------------------------- Surcharge d'opérateurs
+//------------------------------------------------- Surcharge d'opï¿½rateurs
 
-istream & operator >> (istream & is,  Requete & requete)
+istream & operator >> (istream & fluxDentre,  Requete & requete)
 {
 	string lesEntiers;
-	//AdresseIP
-	getline(is, requete.adresseIP,' ');
-	//UserLogName
-	getline(is, requete.userLogName,' ');
-	//AuthentificatedUser
-	getline(is, requete.authentificateUser,' ');
-	is.ignore(16, '[');
-	//Date
-	//--jour--
-	getline(is, lesEntiers, '/');
-	requete.date.jour = atoi(lesEntiers.c_str());
-	//--mois--
-	getline(is, requete.date.mois, '/');
-	//--annee--
-	getline(is, lesEntiers, ':');
-	requete.date.annee = atoi(lesEntiers.c_str());
-	//--heure--
-	getline(is, lesEntiers, ':');
-	requete.date.heure = atoi(lesEntiers.c_str());
-	//--heure--
-	getline(is, lesEntiers, ':');
-	requete.date.minute = atoi(lesEntiers.c_str());
-	//--seconde--
-	getline(is, lesEntiers, ' ');
-	requete.date.seconde = atoi(lesEntiers.c_str());
-	//--fuseau--
-	getline(is, lesEntiers, ']');
-	requete.date.fuseau = atoi(lesEntiers.c_str());
-	//Protocole utilisé
-	is.ignore(16, '\"');
-	getline(is, requete.ProtocoleUtilise, ' ');
-	//Fichier demande
-	getline(is, requete.fichierDemande, ' ');
-	//ReturnCode
-	is.ignore(32, ' ');
-	getline(is, lesEntiers, ' ');
-	requete.returnCode = atoi(lesEntiers.c_str());
-	//tailleReponseOctet
-	getline(is, lesEntiers, ' ');
-	requete.tailleReponseOctet = atoi(lesEntiers.c_str());
-	//referer
-	is.ignore(16, '\"');
-	getline(is, requete.referer, '\"');
-	const string URLBASE = "http://intranet-if.insa-lyon.fr";
-	if (!requete.referer.compare(0, URLBASE.size(), URLBASE))
+	string ligne;
+	getline(fluxDentre,ligne);
+	if( (requete.valide = requete.validerLigne(ligne)))
 	{
-		(requete.referer).erase(0,URLBASE.size());
-		requete.baseUrl = URLBASE;
+		stringstream fluxString;
+		fluxString << ligne;
+		//AdresseIP
+		getline(fluxString, requete.adresseIP,' ');
+		//UserLogName
+		getline(fluxString, requete.userLogName,' ');
+		//AuthentificatedUser
+		getline(fluxString, requete.authentificateUser,' ');
+		fluxString.ignore(16, '[');
+		//Date
+		//--jour--
+		getline(fluxString, lesEntiers, '/');
+		requete.date.jour = atoi(lesEntiers.c_str());
+		//--mois--
+		getline(fluxString, requete.date.mois, '/');
+		//--annee--
+		getline(fluxString, lesEntiers, ':');
+		requete.date.annee = atoi(lesEntiers.c_str());
+		//--heure--
+		getline(fluxString, lesEntiers, ':');
+		requete.date.heure = atoi(lesEntiers.c_str());
+		//--heure--
+		getline(fluxString, lesEntiers, ':');
+		requete.date.minute = atoi(lesEntiers.c_str());
+		//--seconde--
+		getline(fluxString, lesEntiers, ' ');
+		requete.date.seconde = atoi(lesEntiers.c_str());
+		//--fuseau--
+		getline(fluxString, lesEntiers, ']');
+		requete.date.fuseau = atoi(lesEntiers.c_str());
+		//Protocole utilisï¿½
+		fluxString.ignore(16, '\"');
+		getline(fluxString, requete.ProtocoleUtilise, ' ');
+		//Fichier demande
+		getline(fluxString, requete.fichierDemande, ' ');
+		//ReturnCode
+		fluxString.ignore(32, ' ');
+		getline(fluxString, lesEntiers, ' ');
+		requete.returnCode = atoi(lesEntiers.c_str());
+		//tailleReponseOctet
+		getline(fluxString, lesEntiers, ' ');
+		requete.tailleReponseOctet = atoi(lesEntiers.c_str());
+		//referer
+		fluxString.ignore(16, '\"');
+		getline(fluxString, requete.referer, '\"');
+		const string URLBASE = "http://intranet-if.insa-lyon.fr";
+		if (!requete.referer.compare(0, URLBASE.size(), URLBASE))
+		{
+			(requete.referer).erase(0,URLBASE.size());
+			requete.baseUrl = URLBASE;
+		}
+		//identificationNavigateur
+		fluxString.ignore(16, '\"');
+		getline(fluxString, requete.identificationNavigateur, '\"');
+		getline(fluxString,lesEntiers);
+		requete.valide = true;
 	}
-	//identificationNavigateur
-	is.ignore(16, '\"');
-	getline(is, requete.identificationNavigateur, '\"');
+	else
+	{
+		cout << ligne << endl;
+	}
 
-	return is;
+	return fluxDentre;
 }
 
-ostream & operator << (ostream & os, const Requete & requete)
+ostream & operator << (ostream & fluxSortie, const Requete & requete)
 {
-	os << requete.adresseIP << endl;
-	os << requete.userLogName << endl;
-	os << requete.authentificateUser << endl;
-	os << requete.date.jour << "/" << requete.date.mois << "/";
-	os << requete.date.annee << endl;
-	os << requete.date.heure << ":" << requete.date.minute << ":" << requete.date.seconde << " ";
-	os << requete.date.fuseau << endl;
-	os << requete.ProtocoleUtilise << endl;
-	os << requete.fichierDemande << endl;
-	os << requete.returnCode << endl;
-	os << requete.tailleReponseOctet << endl;
-	os << requete.referer << endl;
-	os << requete.baseUrl << endl;
-	os << requete.identificationNavigateur << endl;
-	return os;
+	fluxSortie << requete.adresseIP << endl;
+	fluxSortie << requete.userLogName << endl;
+	fluxSortie << requete.authentificateUser << endl;
+	fluxSortie << requete.date.jour << "/" << requete.date.mois << "/";
+	fluxSortie << requete.date.annee << endl;
+	fluxSortie << requete.date.heure << ":" << requete.date.minute << ":" << requete.date.seconde << " ";
+	fluxSortie << requete.date.fuseau << endl;
+	fluxSortie << requete.ProtocoleUtilise << endl;
+	fluxSortie << requete.fichierDemande << endl;
+	fluxSortie << requete.returnCode << endl;
+	fluxSortie << requete.tailleReponseOctet << endl;
+	fluxSortie << requete.referer << endl;
+	fluxSortie << requete.baseUrl << endl;
+	fluxSortie << requete.identificationNavigateur << endl;
+	return fluxSortie;
 }
 
 //-------------------------------------------- Constructeurs - destructeur
-Requete::Requete()
+Requete::Requete() : valide(false)
 {
-	baseUrl = " ";
+	baseUrl = "";
 #ifdef MAP
 	cout << "Appel au constructeur de <Requete>" << endl;
 #endif
@@ -170,3 +185,15 @@ Requete::~Requete()
 	cout << "Appel au destructeur de <Requete>" << endl;
 #endif
 } //----- Fin de ~Requete
+
+//------------------------------------------------------------------ PRIVE
+
+//----------------------------------------------------- MÃ©thodes protÃ©gÃ©es
+
+bool Requete::validerLigne(string ligne) const
+// Algorithme : verifie la validite de la ligne
+// en utilisant les expressions regulieres
+{
+	regex const motif { "^[[:digit:]+\\.+]+[:digit:]* .+ .+ \\[\\d+/\\w+/\\d+:\\d+:\\d+:\\d+ [\\+\\-]\\d+\\] \"[A-Z]+ .+ .+\" \\d+ [\\d\\-]+ \".+\" \".+\"" };
+	return regex_match(ligne, motif);
+}//----- Fin de Mï¿½thode

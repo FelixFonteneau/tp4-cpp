@@ -1,17 +1,17 @@
 /************************************************************************
 								Requete - description
 								-------------------
-	début                : 25/01/2019
-	copyright : (C)2019 par Félix Fonteneau et Houda Ouhssain
+	dï¿½but                : 25/01/2019
+	copyright : (C)2019 par Fï¿½lix Fonteneau et Houda Ouhssain
 	e - mail : Felix.Fonteneau@insa-lyon.fr / houda.ouhssain@insa-lyon.fr
-/**************************************************************************/
-	
+**************************************************************************/
+
 	//---------- Interface de la classe <Requete> (fichier Requete.h) ----------------
 #if ! defined ( Requete_H )
 #define Requete_H
 using namespace std;
 
-//--------------------------------------------------- Interfaces utilisées
+//--------------------------------------------------- Interfaces utilisï¿½es
 #include <string>
 #include"Graphe.h"
 #include"Top.h"
@@ -32,84 +32,88 @@ int fuseau;
 }Date;
 
 //------------------------------------------------------------------------
-// Rôle de la classe <Requete>
-//Cette classe permet de constituer une requête à partir du contenu d'une ligne 
-//d'un fichier log. Elle permet également de faire tout les traitements sur une requête
-//pour vérifier si elle est conforme à la syntaxe d'une ligne de log.
-//Une fois la requête validée, elle permet de l'ajouter soit au graphe ou au top10
-//mais aussi de filtrer les requêtes par rapport aux différentes specifications:
-//soit en ne prenant pas compte les images, les fichiers javascrip, ou en considérant que
-//les requêtes qui ont été opérés dans un intervalle de temps.
+// Rï¿½le de la classe <Requete>
+//Cette classe permet de constituer une requï¿½te ï¿½ partir du contenu d'une ligne
+//d'un fichier log. Elle permet ï¿½galement de faire tout les traitements sur une requï¿½te
+//pour vï¿½rifier si elle est conforme ï¿½ la syntaxe d'une ligne de log.
+//Une fois la requï¿½te validï¿½e, elle permet de l'ajouter soit au graphe ou au top10
+//mais aussi de filtrer les requï¿½tes par rapport aux diffï¿½rentes specifications:
+//soit en ne prenant pas compte les images, les fichiers javascrip, ou en considï¿½rant que
+//les requï¿½tes qui ont ï¿½tï¿½ opï¿½rï¿½s dans un intervalle de temps.
 //------------------------------------------------------------------------
 
-class Requete 
+class Requete
 {
 	//----------------------------------------------------------------- PUBLIC
 
 public:
 
-	//----------------------------------------------------- Méthodes publiques
-	
-	void AjouterAuGraphe(Graphe &g) const;
-		// Mode d'emploi :Prend en paramètre un pointeur de Graphe auquel il ajoute les attributs 
-		//fichierDemandé et referer de la requête courante.
+	//----------------------------------------------------- Mï¿½thodes publiques
 
-	void AjouterAuTop(Top &t) const ;
-		// Mode d'emploi : Prend en paramètre un pointeur de Top auquel il ajoute l'attribut
+	bool AjouterAuGraphe(Graphe &g) const;
+		// Mode d'emploi :Prend en paramï¿½tre un pointeur de Graphe auquel il ajoute les attributs
+		//fichierDemandï¿½ et referer de la requï¿½te courante.
+
+	bool AjouterAuTop(Top &t) const ;
+		// Mode d'emploi : Prend en paramï¿½tre un pointeur de Top auquel il ajoute l'attribut
 		//fichierDemande de la requete courante
 
 	bool FiltreDoc() const;
 		// Mode d'emploi : Renvoie faux si le document a une extension de type image, css ou javascript
 	    //renvoie vrai sinon.
-		// Contrat : doit être appliqué à une requête "valide"
+		// Contrat : doit ï¿½tre appliquï¿½ ï¿½ une requï¿½te "valide"
 
 	bool FiltreHeure(const int &heure) const;
-	// Mode d'emploi : Renvoie vrai si le document a été consulté dans l'intervalle
+	// Mode d'emploi : Renvoie vrai si le document a ï¿½tï¿½ consultï¿½ dans l'intervalle
 	//[heure, heure+1] renvoie faux sinon.
-	// Contrat : doit être appliqué à une requête "valide"
+	// Contrat : doit ï¿½tre appliquï¿½ ï¿½ une requï¿½te "valide"
 
 
 
-	//------------------------------------------------- Surcharge d'opérateurs
+	//------------------------------------------------- Surcharge d'opï¿½rateurs
 
 
-	friend istream & operator >> (istream &,  Requete & requete);
-	// Mode d'emploi : Extrait les informations du fichier istream à la volée 
-	//pour remplir les attributs d'une requête à partir 
+	friend istream & operator >> (istream & fluxDentre,  Requete & requete);
+	// Mode d'emploi : Extrait les informations du fichier istream ï¿½ la volï¿½e
+	//pour remplir les attributs d'une requï¿½te ï¿½ partir
 	//d'une ligne de log
 
 
-	friend ostream & operator << (ostream &, const Requete & requete);
-	// Mode d'emploi : Afficher sur la sortie standard les attributs 
-	//de la requête un par ligne.
+	friend ostream & operator << (ostream & fluxSortie, const Requete & requete);
+	// Mode d'emploi : Afficher sur la sortie standard les attributs
+	//de la requï¿½te un par ligne.
 
 
 //-------------------------------------------- Constructeurs - destructeur
 
 	Requete();
-	// Mode d'emploi : Construit une requête avec des valeurs
-	// par défaut pour les attributs
-	
+	// Mode d'emploi : Construit une requï¿½te avec des valeurs
+	// par dï¿½faut pour les attributs
+
 	virtual ~Requete();
-	// Mode d'emploi : Détruit la requête courante
-	
+	// Mode d'emploi : Dï¿½truit la requï¿½te courante
+
 
 //------------------------------------------------------------------ PRIVE
 
 private:
+	//----------------------------------------------------- MÃ©thodes protÃ©gÃ©es
+	bool validerLigne(string ligne) const;
+	// Mode d'emploi : renvoie true si la ligne est valide false sinon
 
-	//----------------------------------------------------- Attributs protégés
+	//----------------------------------------------------- Attributs protï¿½gï¿½s
 	string adresseIP;
 	string userLogName;
 	string authentificateUser;
 	Date date;
-	string ProtocoleUtilise; 
+	string ProtocoleUtilise;
 	string fichierDemande;
 	unsigned int returnCode;
-	unsigned long int tailleReponseOctet; 
+	unsigned long int tailleReponseOctet;
 	string baseUrl;
 	string referer;
 	string identificationNavigateur;
+	bool valide;
 };
 
 #endif // Requete_H
