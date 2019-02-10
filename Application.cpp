@@ -1,16 +1,16 @@
 /*************************************************************************
                            Application  -  description
                              -------------------
-    début                : $DATE$
+    debut                : $DATE$
     copyright            : (C) $YEAR$ par $AUTHOR$
     e-mail               : $EMAIL$
 *************************************************************************/
 
-//---------- Réalisation de la classe <Application> (fichier Application.cpp) ------------
+//---------- Realisation de la classe <Application> (fichier Application.cpp) ------------
 
 //---------------------------------------------------------------- INCLUDE
 
-//-------------------------------------------------------- Include système
+//-------------------------------------------------------- Include systeme
 #include <iostream>
 #include <cstring>
 #include <cstdlib>
@@ -20,14 +20,14 @@ using namespace std;
 //------------------------------------------------------ Include personnel
 #include "Application.h"
 #include "Requete.h"
-#include "Graphe.h"
-#include "Top.h"
+
+
 
 //------------------------------------------------------------- Constantes
 
 //----------------------------------------------------------------- PUBLIC
 
-//----------------------------------------------------- Méthodes publiques
+//----------------------------------------------------- Methodes publiques
 bool Application::Traiter(const int argc, char *argv[])
 // Algorithme : verifie les specifications puis analyse le fichier
 // et affiche le resultat sur la sortie standard
@@ -37,7 +37,7 @@ bool Application::Traiter(const int argc, char *argv[])
 
   if(argc < 2)
   {
-    cerr << "Pas assez de paramètres sont passé à l'executable : " << argv[0] << endl;
+    cerr << "Pas assez de parametres sont passes a l'executable : " << argv[0] << endl;
     return false;
   }
 
@@ -46,11 +46,18 @@ bool Application::Traiter(const int argc, char *argv[])
   {
     if( strcmp(argv[i], "-g") == 0)
     {
-      faireGraphe = true;
-
-      //verification de
-      fichierGraphe.open(argv[i+1], ofstream::out);
-      bonneExecution = fichierGraphe.good();
+      //verification que l'argument suivant est un fichier.dot
+		string s = argv[i + 1];
+	  if (s.compare(s.size()-3,3,"dot")==0)
+	  {
+		  faireGraphe = true;
+		  fichierGraphe.open(argv[i + 1], ofstream::out);
+		  bonneExecution = fichierGraphe.good();
+	  }
+	  else
+	  {
+		  cerr << "Extension du fichier a analyser non valide : Graphe non genere" << endl;
+	  }
     }
     if( strcmp(argv[i], "-e") == 0)
     {
@@ -58,8 +65,18 @@ bool Application::Traiter(const int argc, char *argv[])
     }
     if( strcmp(argv[i], "-t") == 0)
     {
-      filtreHeure = true;
-      heure = atoi(argv[i+1]);
+			heure = atoi(argv[i + 1]);
+			//Verification du format de l'heure
+			if (heure < 0 || heure >= 24)
+			{
+				cerr << "Format de l'heure non valide" << endl;
+			}
+			else
+			{
+				filtreHeure = true;
+			}
+
+			
     }
   }
 
@@ -74,15 +91,15 @@ bool Application::Traiter(const int argc, char *argv[])
     {
       cout << top;
     }
-    cout << nbLignesTraitees << " ligne(s) traitées, " << nbLignesErronnees
-         << " ligne(s) erronées" << endl;
+    cout << nbLignesTraitees << " ligne(s) traitees, " << nbLignesErronnees
+         << " ligne(s) erronees" << endl;
   }
   return bonneExecution;
 
 } //----- Fin de Traiter
 
 
-//------------------------------------------------- Surcharge d'opérateurs
+//------------------------------------------------- Surcharge d'operateurs
 
 //-------------------------------------------- Constructeurs - destructeur
 Application::Application ():
@@ -109,50 +126,60 @@ Application::~Application ( )
 
 //------------------------------------------------------------------ PRIVE
 
-//----------------------------------------------------- Méthodes protégées
+//----------------------------------------------------- Methodes protegees
 bool Application::traiterLogs(const char * nomFichier)
 // Algorithme :
 //
 {
-  char c;
-  ifstream fichierLogs(nomFichier, ifstream::in);
-  if (!fichierLogs.good())
-  {
-    cerr << "Erreur d'ouverture du fichier de log : " << nomFichier << endl;
-    return false;
-  }
+	//Verification que le fichier en entree a bien une extension .log
+	const string s = nomFichier;
+	if (s.compare(s.size() - 3, 3, "log") == 0|| s.compare(s.size() - 3, 3, "txt") == 0)
+	{
+		char c;
+		ifstream fichierLogs(nomFichier, ifstream::in);
+		if (!fichierLogs.good())
+		{
+			cerr << "Erreur d'ouverture du fichier de log : " << nomFichier << endl;
+			return false;
+		}
 
-  Requete requete;
+		Requete requete;
 
-  while (fichierLogs.good())
-  {
-    fichierLogs >> requete;
+		while (fichierLogs.good())
+		{
+			fichierLogs >> requete;
 
-    //on verifie les specifications avnat d'ajouter
-    if( (!filtreHeure || (filtreHeure && requete.FiltreHeure(heure))) &&
-        (!enleverExtensions || (enleverExtensions && !requete.FiltreDoc())) )
-    {
-      if(faireGraphe)
-      {
-        nbLignesErronnees = requete.AjouterAuGraphe(graphe) ? nbLignesErronnees : nbLignesErronnees + 1;
-      }
-      else
-      {
-        nbLignesErronnees = requete.AjouterAuTop(top) ? nbLignesErronnees : nbLignesErronnees + 1;
-      }
-      ++nbLignesTraitees;
-    }
-    c = fichierLogs.get();
+			//on verifie les specifications avant d'ajouter
+			if ((!filtreHeure || (filtreHeure && requete.FiltreHeure(heure))) &&
+				(!enleverExtensions || (enleverExtensions && !requete.FiltreDoc())))
+			{
+				if (faireGraphe)
+				{
+					nbLignesErronnees = requete.AjouterAuGraphe(graphe) ? nbLignesErronnees : nbLignesErronnees + 1;
+				}
+				else
+				{
+					nbLignesErronnees = requete.AjouterAuTop(top) ? nbLignesErronnees : nbLignesErronnees + 1;
+				}
+				++nbLignesTraitees;
+			}
+			c = fichierLogs.get();
 
-    //on sort car il ne reste juste un caractere vide qui peut troubler l'analyse
-    if (c == '\n')
-    {
-      break;
-    }
-    fichierLogs.putback(c);
-  }
+			//on sort car il ne reste juste un caractere vide qui peut troubler l'analyse
+			if (c == '\n')
+			{
+				break;
+			}
+			fichierLogs.putback(c);
+		}
 
-  fichierLogs.close();
-  return true;
+		fichierLogs.close();
+		return true;
+	}
+	else
+	{
+		cerr << "Extension du fichier à analyser non valide" << endl;
+		return false;
+	}
 
 } //----- Fin de Traiter

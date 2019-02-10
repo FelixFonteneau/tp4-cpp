@@ -12,8 +12,8 @@
 
 //--------------------------------------------------- Interfaces utilisées
 #include <fstream>
-#include "Graphe.h"
-#include "Top.h"
+#include "Requete.h"
+
 
 //------------------------------------------------------------- Constantes
 
@@ -24,7 +24,7 @@
 // Cette classe permet de gerer les entrees sorties du programme. Elle gere
 // les parametre passes a l'executable, leur validite ainsi que toute les
 // specifications.
-// Si tout est correcte, elle passe a l'analyse du fichier de log et renvoi
+// Si tout est correcte, elle passe a l'analyse du fichier de log et renvoie
 // l'analyse obtenue sur la sortie standard.
 //------------------------------------------------------------------------
 

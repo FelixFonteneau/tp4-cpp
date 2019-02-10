@@ -1,16 +1,16 @@
 /*************************************************************************
                            Graphe  -  description
                              -------------------
-    début                : $DATE$
+    debut                : $DATE$
     copyright            : (C) $YEAR$ par $AUTHOR$
     e-mail               : $EMAIL$
 *************************************************************************/
 
-//---------- Réalisation de la classe <Graphe> (fichier Graphe.cpp) ------------
+//---------- Realisation de la classe <Graphe> (fichier Graphe.cpp) ------------
 
 //---------------------------------------------------------------- INCLUDE
 
-//-------------------------------------------------------- Include système
+//-------------------------------------------------------- Include systeme
 #include <string>
 #include <unordered_map>
 #include <iostream>
@@ -24,7 +24,7 @@ using namespace std;
 
 //----------------------------------------------------------------- PUBLIC
 
-//----------------------------------------------------- Méthodes publiques
+//----------------------------------------------------- Methodes publiques
 
 void Graphe::AjouterArc(string referer, string cible)
 {
@@ -34,7 +34,7 @@ void Graphe::AjouterArc(string referer, string cible)
 } //----- Fin de AjouterLog
 
 
-//------------------------------------------------- Surcharge d'opérateurs
+//------------------------------------------------- Surcharge d'operateurs
 ostream & operator << (ostream & os, const Graphe & graphe)
 // Algorithme :
 {
@@ -101,7 +101,7 @@ Graphe::~Graphe ( )
 
 //------------------------------------------------------------------ PRIVE
 
-//----------------------------------------------------- Méthodes protégées
+//----------------------------------------------------- Methodes protegees
 
 void Graphe::ajouterGraphe(string referer, string cible)
 // Algorithme : Recherche si le referer et la cible existent dans le catalogue

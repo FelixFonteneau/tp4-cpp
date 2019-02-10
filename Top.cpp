@@ -1,16 +1,16 @@
 /*************************************************************************
                            Top  -  description
                              -------------------
-    début                : $DATE$
+    debut                : $DATE$
     copyright            : (C) $YEAR$ par $AUTHOR$
     e-mail               : $EMAIL$
 *************************************************************************/
 
-//---------- Réalisation de la classe <Top> (fichier Top.cpp) ------------
+//---------- Realisation de la classe <Top> (fichier Top.cpp) ------------
 
 //---------------------------------------------------------------- INCLUDE
 
-//-------------------------------------------------------- Include système
+//-------------------------------------------------------- Include systeme
 #include <string>
 #include <unordered_map>
 #include <map>
@@ -24,7 +24,7 @@ using namespace std;
 
 //----------------------------------------------------------------- PUBLIC
 
-//----------------------------------------------------- Méthodes publiques
+//----------------------------------------------------- Methodes publiques
 
 void Top::AjouterCible(string cible)
 //Algorithme :
@@ -45,9 +45,9 @@ void Top::AjouterCible(string cible)
   }
 } //----- Fin de AjouterCible
 
-//------------------------------------------------- Surcharge d'opérateurs
+//------------------------------------------------- Surcharge d'operateurs
 ostream & operator << (ostream & os, const Top & top)
-// Algorithme : Pour créer le top, on ne peut pas trier selon le nombre d'finNbIteration
+// Algorithme : Pour creer le top, on ne peut pas trier selon le nombre d'finNbIteration
 // de listeDesCibles car le second membre n'est pas un clef.
 // La solution est donc d'ajouter toutes les valeur à une multimap en inversant
 // clef et valeur. Puis on prend les n plus grandes clefs (nb iterations).
@@ -69,10 +69,10 @@ ostream & operator << (ostream & os, const Top & top)
   finNbIteration = listeOrdonnee.rend();
   debutNbIteration = listeOrdonnee.rbegin();
 
-  os << "Liste des sites les plus demandés : " << endl;
+  os << "Liste des sites les plus demandes : " << endl;
   for(unsigned i(1); (i <= top.nombreDeTops) && (debutNbIteration != finNbIteration); i++)
   {
-    os << "  " << i << " - " << debutNbIteration->second << " demandé ";
+    os << "  " << i << " - " << debutNbIteration->second << " demande ";
     os << debutNbIteration->first << " fois " << endl;
     debutNbIteration++;
   }
@@ -105,4 +105,4 @@ Top::~Top ( )
 
 //------------------------------------------------------------------ PRIVE
 
-//----------------------------------------------------- Méthodes protégées
+//----------------------------------------------------- Methodes protegees

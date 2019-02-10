@@ -1,16 +1,16 @@
 /************************************************************************
 								Requete - description
 								------------------ -
-	d�but                : 25/01/2019
-	copyright : (C)2019 par F�lix Fonteneau et Houda Ouhssain
+	debut                : 25/01/2019
+	copyright : (C)2019 par Felix Fonteneau et Houda Ouhssain
 	e - mail : Felix.Fonteneau@insa-lyon.fr / houda.ouhssain@insa-lyon.fr
 **************************************************************************/
 
-	//---------- R�alisation de la classe <Requete> (fichier Requete.cpp) ------------
+	//---------- Realisation de la classe <Requete> (fichier Requete.cpp) ------------
 
 	//---------------------------------------------------------------- INCLUDE
 
-	//-------------------------------------------------------- Include syst�me
+	//-------------------------------------------------------- Include systeme
 #include <iostream>
 using namespace std;
 #include <algorithm>
@@ -25,44 +25,44 @@ using namespace std;
 
 //----------------------------------------------------------------- PUBLIC
 
-//----------------------------------------------------- M�thodes publiques
+//----------------------------------------------------- Methodes publiques
 
   bool Requete::AjouterAuGraphe(Graphe &g) const
 	{
-		if(valide)
+		if(valide && returnCode==200)
 		{
 			g.AjouterArc(referer, fichierDemande);
 		}
 		return valide;
-	} //----- Fin de M�thode
+	} //----- Fin de Methode
 
 
 	bool Requete::AjouterAuTop(Top &t)const
 	{
-		if(valide)
+		if(valide && returnCode == 200)
 		{
 			t.AjouterCible(fichierDemande);
 		}
 		return valide;
-	} //----- Fin de M�thode
+	} //----- Fin de Methode
 
 	bool Requete::FiltreDoc() const
-	// Algorithme : traite le document de facon � ne laisser
+	// Algorithme : traite le document de facon e ne laisser
 	//que l'extension, puis compare l'extension avec celle
 	//d'un doc de type image, css ou javascript
 	{
-		bool inclu=true;
+		bool exclu=true;
 		string extension = fichierDemande;
 		int i = extension.find_last_of(".");
 		extension.erase(0, i + 1);
 		if (extension == "jped" || extension == "gif" || extension == "jpg" || extension == "png"
 			|| extension == "tif" || extension == "css" || extension == "js")
 		{
-			return !inclu;
+			return exclu;
 		}
-		return inclu;
+		return !exclu;
 
-	}//----- Fin de M�thode
+	}//----- Fin de Methode
 
 	bool Requete::FiltreHeure( const int &heure) const
 	{
@@ -74,10 +74,10 @@ using namespace std;
 		{
 			return false;
 		}
-	}//----- Fin de M�thode
+	}//----- Fin de Methode
 
 
-//------------------------------------------------- Surcharge d'op�rateurs
+//------------------------------------------------- Surcharge d'operateurs
 
 istream & operator >> (istream & fluxDentre,  Requete & requete)
 {
@@ -116,7 +116,7 @@ istream & operator >> (istream & fluxDentre,  Requete & requete)
 		//--fuseau--
 		getline(fluxString, lesEntiers, ']');
 		requete.date.fuseau = atoi(lesEntiers.c_str());
-		//Protocole utilis�
+		//Protocole utilise
 		fluxString.ignore(16, '\"');
 		getline(fluxString, requete.ProtocoleUtilise, ' ');
 		//Fichier demande
@@ -188,7 +188,7 @@ Requete::~Requete()
 
 //------------------------------------------------------------------ PRIVE
 
-//----------------------------------------------------- Méthodes protégées
+//----------------------------------------------------- Methodes protegees
 
 bool Requete::validerLigne(string ligne) const
 // Algorithme : verifie la validite de la ligne
@@ -196,4 +196,4 @@ bool Requete::validerLigne(string ligne) const
 {
 	regex const motif { "^[[:digit:]+\\.+]+[:digit:]* .+ .+ \\[\\d+/\\w+/\\d+:\\d+:\\d+:\\d+ [\\+\\-]\\d+\\] \"[A-Z]+ .+ .+\" \\d+ [\\d\\-]+ \".+\" \".+\"" };
 	return regex_match(ligne, motif);
-}//----- Fin de M�thode
+}//----- Fin de Methode
