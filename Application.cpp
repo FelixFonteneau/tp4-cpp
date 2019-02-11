@@ -15,6 +15,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <fstream>
+#include<cmath>
 using namespace std;
 
 //------------------------------------------------------ Include personnel
@@ -35,7 +36,7 @@ bool Application::Traiter(const int argc, char *argv[])
   bool bonneExecution = true;
   ofstream fichierGraphe;
 
-  if(argc < 2)
+  if(argc <=2)
   {
     cerr << "Pas assez de parametres sont passes a l'executable : " << argv[0] << endl;
     return false;
@@ -44,21 +45,25 @@ bool Application::Traiter(const int argc, char *argv[])
   //on regarde toutes les options passees
   for (int i(1); i < argc-1; i++)
   {
-    if( strcmp(argv[i], "-g") == 0)
-    {
-      //verification que l'argument suivant est un fichier.dot
-		string s = argv[i + 1];
-	  if (s.compare(s.size()-3,3,"dot")==0)
+
+	  if (strcmp(argv[i], "-g") == 0)
 	  {
-		  faireGraphe = true;
-		  fichierGraphe.open(argv[i + 1], ofstream::out);
-		  bonneExecution = fichierGraphe.good();
+			  //verification que l'argument suivant est un fichier.dot
+			  string s = argv[i + 1];
+			  if (s.compare(s.size() - 3, 3, "dot") == 0)
+			  {
+				  faireGraphe = true;
+				  fichierGraphe.open(argv[i + 1], ofstream::out);
+				  bonneExecution = fichierGraphe.good();
+			  }
+			  else
+			  {
+				  cerr << "Extension du fichier graphe non valide : Graphe non genere" << endl;
+			  }
 	  }
-	  else
-	  {
-		  cerr << "Extension du fichier a analyser non valide : Graphe non genere" << endl;
-	  }
-    }
+	  
+	 
+
     if( strcmp(argv[i], "-e") == 0)
     {
       enleverExtensions = true;
@@ -75,8 +80,6 @@ bool Application::Traiter(const int argc, char *argv[])
 			{
 				filtreHeure = true;
 			}
-
-			
     }
   }
 
@@ -178,7 +181,7 @@ bool Application::traiterLogs(const char * nomFichier)
 	}
 	else
 	{
-		cerr << "Extension du fichier à analyser non valide" << endl;
+		cerr << "Extension du fichier à analyser non valide : doit être un .log ou un .txt" << endl;
 		return false;
 	}
 
