@@ -51,7 +51,7 @@ using namespace std;
 	//que l'extension, puis compare l'extension avec celle
 	//d'un doc de type image, css ou javascript
 	{
-		bool exclu=true;
+		bool exclu=false;
 		string extension = fichierDemande;
 		int i = extension.find_last_of(".");
 		extension.erase(0, i + 1);
