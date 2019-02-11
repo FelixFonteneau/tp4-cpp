@@ -51,16 +51,16 @@ using namespace std;
 	//que l'extension, puis compare l'extension avec celle
 	//d'un doc de type image, css ou javascript
 	{
-		bool exclu=false;
+		bool inclu=false;
 		string extension = fichierDemande;
 		int i = extension.find_last_of(".");
 		extension.erase(0, i + 1);
 		if (extension == "jped" || extension == "gif" || extension == "jpg" || extension == "png"
 			|| extension == "tif" || extension == "css" || extension == "js")
 		{
-			return exclu;
+			return !inclu;
 		}
-		return !exclu;
+		return inclu;
 
 	}//----- Fin de Methode
 

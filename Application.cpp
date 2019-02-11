@@ -16,6 +16,7 @@
 #include <cstdlib>
 #include <fstream>
 #include<cmath>
+
 using namespace std;
 
 //------------------------------------------------------ Include personnel
@@ -36,7 +37,7 @@ bool Application::Traiter(const int argc, char *argv[])
   bool bonneExecution = true;
   ofstream fichierGraphe;
 
-  if(argc <=2)
+  if(argc < 2 )
   {
     cerr << "Pas assez de parametres sont passes a l'executable : " << argv[0] << endl;
     return false;
@@ -50,7 +51,7 @@ bool Application::Traiter(const int argc, char *argv[])
 	  {
 			  //verification que l'argument suivant est un fichier.dot
 			  string s = argv[i + 1];
-			  if (s.compare(s.size() - 3, 3, "dot") == 0)
+			  if (s.size()>=3 && s.compare(s.size() - 3, 3, "dot") == 0)
 			  {
 				  faireGraphe = true;
 				  fichierGraphe.open(argv[i + 1], ofstream::out);
@@ -72,7 +73,7 @@ bool Application::Traiter(const int argc, char *argv[])
     {
 			heure = atoi(argv[i + 1]);
 			//Verification du format de l'heure
-			if (heure < 0 || heure >= 24)
+			if (heure < 0 || heure >= 24 ||strcmp(to_string(atoi(argv[i + 1])).c_str(), argv[i + 1]))
 			{
 				cerr << "Format de l'heure non valide" << endl;
 			}
@@ -136,7 +137,7 @@ bool Application::traiterLogs(const char * nomFichier)
 {
 	//Verification que le fichier en entree a bien une extension .log
 	const string s = nomFichier;
-	if (s.compare(s.size() - 3, 3, "log") == 0|| s.compare(s.size() - 3, 3, "txt") == 0)
+	if ( s.size()>=3 && (s.compare(s.size() - 3, 3, "log") == 0|| s.compare(s.size() - 3, 3, "txt") == 0))
 	{
 		char c;
 		ifstream fichierLogs(nomFichier, ifstream::in);
@@ -166,6 +167,7 @@ bool Application::traiterLogs(const char * nomFichier)
 				}
 				++nbLignesTraitees;
 			}
+			
 			c = fichierLogs.get();
 
 			//on sort car il ne reste juste un caractere vide qui peut troubler l'analyse
@@ -174,6 +176,10 @@ bool Application::traiterLogs(const char * nomFichier)
 				break;
 			}
 			fichierLogs.putback(c);
+		}
+		if (nbLignesTraitees == 0)
+		{
+			cout << "Aucun log ne correspond à votre demande" << endl;
 		}
 
 		fichierLogs.close();

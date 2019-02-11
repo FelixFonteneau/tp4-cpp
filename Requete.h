@@ -59,8 +59,8 @@ public:
 		//fichierDemande de la requete courante
 
 	bool FiltreDoc() const;
-		// Mode d'emploi : Renvoie vrai si le document a une extension de type image, css ou javascript
-	    //renvoie faux sinon.
+		// Mode d'emploi : Renvoie faux si le document a une extension de type image, css ou javascript
+	    //renvoie vrai sinon.
 		// Contrat : doit �tre appliqu� � une requ�te "valide"
 
 	bool FiltreHeure(const int &heure) const;
