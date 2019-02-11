@@ -68,7 +68,7 @@ bool Application::Traiter(const int argc, char *argv[])
     {
       enleverExtensions = true;
     }
-    if( strcmp(argv[i], "-t") == 0)
+    if( strcmp(argv[i], "-t") == 0 && i+2<argc) //2 eme condition pou verifier quel'utilisateur a saisit uneheure
     {
 			heure = atoi(argv[i + 1]);
 			//Verification du format de l'heure
